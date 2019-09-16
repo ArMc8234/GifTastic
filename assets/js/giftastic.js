@@ -29,7 +29,7 @@ $("#submit").on('click', function() {
 
 
 
-function search(name){
+function search(){
     var name = $("#searchWindow").val();
     var queryUrl = "http://api.giphy.com/v1/gifs/search?q=" + name + "&api_key=rsqtJvT0jn1MYMD9mJxESRmYqmjBXIhy&limit=10";
     
@@ -40,10 +40,6 @@ function search(name){
         var result = response.data;
         console.log(result)
        
-       
-        
-
-        for (var i = 0; i < result.length; i++) {
           
         
         for (var i = 0; i < result.length; i++){
@@ -52,8 +48,14 @@ function search(name){
                     var preview = result[i].images.fixed_height_downsampled.url;
                     console.log("imageURL" + imageURL);
                     var image = $('<img>');
-                    image.attr('src', preview);
-                    $('#gifBox').prepend(image).stop();
+                    image.attr('src', imageURL, 'data-alt', preview);
+                    var gifHolder = [];
+                    $.each(gif, function (index){
+                        gifHolder[i] = new Image();
+                        gifHolder[i].src = gif[i];
+                    })
+
+                    $('#gifBox').prepend(image);
                     rating = result[i].rating;
                     var p = $("<p>").text("Rating:  " + rating);
                     $("<img>").append(rating);
@@ -61,7 +63,7 @@ function search(name){
                 };
 
             };
-         };
+         
     });
 };
 //create a button based to button menu
@@ -73,25 +75,43 @@ function search(name){
         var name = $("#searchWindow").val();
         var buttonField = $("<button>" + buttonNames[i]+ "</button>");
         buttonField.attr("id", buttonNames[i]);
-        // Providing the button's text with a value of the movie at index i
         buttonField.html(buttonNames[i]);
-        // Adding the button to the HTML
         $("#btnMenu").append(buttonField);
         };
     };
+    
     //start and stop animation
-    $('img').on('click', function (){
-        if ($(this).stop()) {
-            $(this).animate();
-        }
-        else if ($(this).animate()) {
-            $(this).stop();
-        };
+    var getGif = function() {
+        var gif = [];
+        $('img').each(function(){
+            var data = $(this).data('alt');
+            gif.push(data);
+        });
+        return gif;
+    }
+    var gif = getGif();
 
-    });
+    $('img').on('click', function() {
+        var $this = $(this);
+        $index = $this.index();
+        $img = $this.childen('img');
+        $imgSrc = $img.attr('src');
+        $imgAlt = $img.attr('data-alt');
+        $imgExt = $imgAlt.split('.');
+
+        if($imgExt[1] === 'gif') {
+            $img.attr('src', $img.data('alt')).attr('data-alt', $imgSrc);
+        }
+        else {
+            $img.attr('src', $imgAlt).attr('data-alt', $img.data('alt'));
+        }
+
+    })
+
+
     //activate search feature of buttons based on the data-name
 
-    $('button').on('click', function(){
+    $('button').on('click', function() {
         alert("hello");
     });
     // $("button").on("click", function() {
