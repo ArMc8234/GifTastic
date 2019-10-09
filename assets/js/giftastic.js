@@ -7,7 +7,7 @@ $(document).ready(function() {
         var name;
         var buttonNames = [];
 
-        var url = "http://api.giphy.com/v1/gifs/search?q=";
+        var url = "https://api.giphy.com/v1/gifs/search?q=";
         var apiKey = "&api_key=rsqtJvT0jn1MYMD9mJxESRmYqmjBXIhy&limit=10";
 
 
